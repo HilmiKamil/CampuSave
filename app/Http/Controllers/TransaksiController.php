@@ -6,7 +6,7 @@ use App\Models\Transaksi;
 use App\Models\User;
 use App\Models\BudgetCategory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; // Ditambahkan
+use Illuminate\Support\Facades\Auth;
 
 class TransaksiController extends Controller
 {
@@ -48,6 +48,35 @@ class TransaksiController extends Controller
 
         Transaksi::create($request->all());
         return redirect()->route('admin.transaksi.index')->with('success', 'Transaksi berhasil ditambahkan.');
+    }
+
+    public function storeByUser(Request $request)
+    {
+        $request->validate([
+            'type'        => 'required|in:pemasukan,pengeluaran',
+            'amount'      => 'required|numeric|min:0',
+            'budget_category_id' => 'required|exists:budget_categories,id',
+            'description' => 'nullable|string',
+            'date'        => 'required|date',
+        ]);
+
+        // Gunakan user yang sedang login
+        $request->merge(['user_id' => Auth::id()]);
+
+        if ($request->type === 'pengeluaran') {
+            $category = BudgetCategory::find($request->budget_category_id);
+            $spent = $category->calculateSpent();
+            $remaining = $category->amount - $spent;
+
+            if ($request->amount > $remaining) {
+                return back()->withErrors([
+                    'amount' => 'Pengeluaran melebihi sisa budget kategori. Sisa: Rp ' . number_format($remaining, 0, ',', '.')
+                ]);
+            }
+        }
+
+        Transaksi::create($request->all());
+        return back()->with('success', 'Transaksi berhasil ditambahkan.');
     }
 
     public function show()

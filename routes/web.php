@@ -24,6 +24,15 @@ Route::middleware(['auth'])->get('/admin/index', function () {
     return view('admin.index');
 })->name('admin.index');
 
+Route::middleware('auth')->group(function () {
+    // ... rute lainnya ...
+
+    // Rute untuk transaksi user (mahasiswa)
+    Route::prefix('user/transaksi')->name('user.transaksi.')->group(function () {
+        Route::post('/store', [TransaksiController::class, 'storeByUser'])->name('store');
+    });
+});
+
 
 
 // Rute tabungan mahasiswa

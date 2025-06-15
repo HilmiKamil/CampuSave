@@ -296,12 +296,12 @@
     </div>
   </main>
 
-  <!-- Modals (tetap sama) -->
+  <!-- Modals -->
 
 <!-- Add Expense Modal -->
 <div class="modal fade" id="addExpenseModal" tabindex="-1" aria-labelledby="addExpenseModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <form method="POST" action="{{ route('admin.transaksi.store') }}">
+    <form method="POST" action="{{ route('user.transaksi.store') }}">
       @csrf
       <div class="modal-content">
         <div class="modal-header">
@@ -310,7 +310,6 @@
         </div>
         <div class="modal-body">
 
-          <!-- ✅ DEBUG MESSAGE -->
           @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
               {{ session('success') }}
@@ -330,7 +329,6 @@
             </div>
           @endif
 
-          <input type="hidden" name="user_id" value="{{ Auth::id() }}">
           <input type="hidden" name="type" value="pengeluaran">
 
           <div class="mb-3">
@@ -368,11 +366,10 @@
   </div>
 </div>
 
-
   <!-- Add Income Modal -->
   <div class="modal fade" id="addIncomeModal" tabindex="-1" aria-labelledby="addIncomeModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <form method="POST" action="{{ route('admin.transaksi.store') }}">
+      <form method="POST" action="{{ route('user.transaksi.store') }}">
         @csrf
         <div class="modal-content">
           <div class="modal-header">
@@ -396,7 +393,6 @@
             </ul>
           </div>
         @endif
-            <input type="hidden" name="user_id" value="{{ Auth::id() }}"> <!-- Add user_id here -->
             <input type="hidden" name="type" value="pemasukan">
 
             <div class="mb-3">
@@ -434,14 +430,9 @@
     </div>
   </div>
 
-
-
-  <!-- ... -->
-
   @include('components.footer-user')
 
-<script src="{{ asset('user/landing/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<!-- ✅ Pastikan script ini ditaruh di BAWAH elemen HTML, tepat sebelum </body> -->
+  <script src="{{ asset('user/landing/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
   <script>
     const fields = ["total-saldo", "pengeluaran-hari-ini", "pendapatan", "pengeluaran", "rata-rata"];
@@ -470,10 +461,8 @@
       isDetailShown = !isDetailShown;
       detailSection.style.display = isDetailShown ? "block" : "none";
       detailBtn.innerHTML = isDetailShown 
-        ? 'Sembunyikan Detail <i class="fas fa-chevron-up ms-2"></i>'
-        : 'Tampilkan Detail <i class="fas fa-chevron-down ms-2"></i>';
+        ? 'Sembunyikan Detail ▲'
+        : 'Tampilkan Detail ▼';
     }
   </script>
-
-
 </body>
